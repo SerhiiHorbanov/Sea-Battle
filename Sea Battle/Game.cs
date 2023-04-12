@@ -8,15 +8,18 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        ShipMap firstPlayer;
-        ShipMap secondPlayer;
-        GameEndResult gameEndResult = GameEndResult.Draw;
-        GameplayState gameplayState = GameplayState.P1PlacingShips;
-        bool isSecondPlayerAI;
+        private ShipMap firstPlayerMap = new ShipMap(new bool[10,10]);
+        private ShipMap secondPlayerMap;
+        private GameEndResult gameEndResult = GameEndResult.Draw;
+        private GameplayState gameplayState = GameplayState.P1PlacingShips;
+        private bool isSecondPlayerAI;
         private bool endedPlaying = false;
+        private int YInputCord;
+        private int XInputCord;
+
         public void Start()
         {
-            SetupConsole();
+            Console.Title = "Sea Battle";
 
             while (!endedPlaying)
             {
@@ -38,10 +41,28 @@ namespace Sea_Battle
         private void Input()
         {
             string input = Console.ReadLine();
-            string[] words = input.Split(' ');
-            if (words.Length == 2 && int.TryParse(words[0], out int y))
-            {
 
+            if (input.Length == 2 || input.Length == 3)
+            {
+                char firstInputChar = input[input.Length - 1];
+                char lastInputChar = input[input.Length - 1];
+
+                bool isFirstYCord = (firstInputChar <= 'J' && firstInputChar >= 'A');
+                bool isLastYCord = (lastInputChar <= 'J' && lastInputChar >= 'A');
+                bool isFirstXCord = (firstInputChar <= '9' && firstInputChar >= '0');
+                bool isLastXCord = (lastInputChar <= '9' && lastInputChar >= '0');
+
+                if ((isFirstYCord || isLastYCord) && (isFirstXCord || isLastXCord))
+                {
+                    if (isFirstYCord)
+                    {
+                        YInputCord = firstInputChar - 'A';
+                        XInputCord = lastInputChar - '0';
+                        return;
+                    }
+                    XInputCord = firstInputChar - '0';
+                    YInputCord = lastInputChar - 'A';
+                }
             }
         }
 
@@ -55,10 +76,6 @@ namespace Sea_Battle
 
         }
 
-        private void SetupConsole()
-        {
-
-        }
     }
 
     struct ShipMap
@@ -70,6 +87,30 @@ namespace Sea_Battle
         {
             this.shipMap = shipMap;
             shotTilesMap = new bool[10, 10];
+        }
+
+        public void RenderMapForEnemy(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(" 0123456789");
+            for (int y = 0; y < 10; y++)
+            {
+                stringBuilder.Append('A' + y);
+                for (int x = 0; x < 10; x++)
+                {
+                    char charToAdd = '#';
+                    bool isShotTile = shotTilesMap[y, x];
+                    bool isShipTile = shipMap[y, x];
+                    if (isShotTile)
+                    {
+                        if (isShipTile)
+                            charToAdd = 'X';
+                        else
+                            charToAdd = '~';
+                    }
+                    stringBuilder.Append(charToAdd);
+                }
+                stringBuilder.Append("\n");
+            }
         }
     }
 }
