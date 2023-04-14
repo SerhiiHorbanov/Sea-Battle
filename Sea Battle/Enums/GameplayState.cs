@@ -1,10 +1,13 @@
 ﻿namespace Sea_Battle
 {
-    enum GameplayState
+    namespace Enums
     {
-        P1PlacingShips,
-        P2PlacingShips,
-        P1Move,
-        P2Move,
+        enum GameplayState
+        {
+            P1PlacingShips,
+            P2PlacingShips,
+            FirstPlayerMove,
+            P2Move,
+        }
     }
 }

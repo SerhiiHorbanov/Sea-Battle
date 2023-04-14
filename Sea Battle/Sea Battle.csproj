@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{37E06435-B9AD-48FE-9E8A-D35A3BA646D4}</ProjectGuid>
+    <ProjectGuid>{C771290C-ED7B-4D51-B351-563FF1EAADAD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Sea_Battle</RootNamespace>
     <AssemblyName>Sea Battle</AssemblyName>
@@ -43,8 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums.cs" />
-    <Compile Include="Game.cs" />
+    <Compile Include="Enums\GameEndResult.cs" />
+    <Compile Include="Enums\GameplayState.cs" />
+    <Compile Include="ShipMap.cs" />
+    <Compile Include="SeaBattle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

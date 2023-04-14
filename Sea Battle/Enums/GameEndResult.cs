@@ -1,9 +1,12 @@
 ﻿namespace Sea_Battle
 {
-    enum GameEndResult
+    namespace Enums
     {
-        P1Win,
-        P2Win,
-        Draw
+        enum GameEndResult
+        {
+            P1Win,
+            P2Win,
+            Draw
+        }
     }
 }

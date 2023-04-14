@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using Sea_Battle.Enums;
 
 namespace Sea_Battle
 {
     class SeaBattle
     {
-        private ShipMap firstPlayerMap = new ShipMap(new bool[10,10]);
-        private ShipMap secondPlayerMap;
+        private ShipMap firstPlayerMap = new ShipMap(new bool[10, 10]);
+        private ShipMap secondPlayerMap = new ShipMap(new bool[10, 10]);
         private GameEndResult gameEndResult = GameEndResult.Draw;
-        private GameplayState gameplayState = GameplayState.P1PlacingShips;
+        private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool isSecondPlayerAI;
         private bool endedPlaying = false;
         private int YInputCord;
@@ -37,7 +38,7 @@ namespace Sea_Battle
 
             Console.WriteLine("press any button to close the game");
         }
-        
+
         private void Input()
         {
             string input = Console.ReadLine();
@@ -73,8 +74,30 @@ namespace Sea_Battle
 
         private void Render()
         {
-
+            switch (gameplayState)
+            {
+                case GameplayState.FirstPlayerMove: case GameplayState.P2Move:
+                    RenderMove();
+                    break;
+            }
         }
 
+        private void RenderMove()
+        {
+
+            StringBuilder stringBuilder = new StringBuilder();
+
+            //ShipMap currentPlayerMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
+            //ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
+
+            //спочатку я хотів зробити так як згори але зрозумів що так як нижче буде краще
+
+            (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
+            stringBuilder.Append("this is your map:\n");
+            currentPlayerMap.RenderMap(stringBuilder, true);
+            stringBuilder.Append("this is your enemy's map:\n");
+            currentEnemyMap.RenderMap(stringBuilder, false);
+            Console.WriteLine(stringBuilder.ToString());
+        }
     }
 }
