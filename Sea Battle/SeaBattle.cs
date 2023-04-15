@@ -17,6 +17,7 @@ namespace Sea_Battle
         private bool endedPlaying = false;
         private int YInputCord;
         private int XInputCord;
+        private bool isStreak;
 
         public void Start()
         {
@@ -37,6 +38,7 @@ namespace Sea_Battle
                 Console.WriteLine("second player won!");
 
             Console.WriteLine("press any button to close the game");
+            Console.ReadKey();
         }
 
         private void Input()
@@ -69,22 +71,38 @@ namespace Sea_Battle
 
         private void Update()
         {
-
-        }
-
-        private void Render()
-        {
             switch (gameplayState)
             {
-                case GameplayState.FirstPlayerMove: case GameplayState.P2Move:
+                case GameplayState.FirstPlayerMove:
+                case GameplayState.SecondPlayerMove:
                     RenderMove();
                     break;
             }
         }
 
+
+        private void Render()
+        {
+            switch (gameplayState)
+            {
+                case GameplayState.FirstPlayerMove: case GameplayState.SecondPlayerMove:
+                    RenderMove();
+                    break;
+            }
+        }
+
+        private void UpdateMove()
+        {
+            ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
+            currentEnemyMap.ShootTile(XInputCord, YInputCord);
+            switch (currentEnemyMap.shipMap[YInputCord, XInputCord])
+            {
+                
+            }
+        }
+
         private void RenderMove()
         {
-
             StringBuilder stringBuilder = new StringBuilder();
 
             //ShipMap currentPlayerMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
@@ -93,10 +111,13 @@ namespace Sea_Battle
             //спочатку я хотів зробити так як згори але зрозумів що так як нижче буде краще
 
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
+            
             stringBuilder.Append("this is your map:\n");
             currentPlayerMap.RenderMap(stringBuilder, true);
+
             stringBuilder.Append("this is your enemy's map:\n");
             currentEnemyMap.RenderMap(stringBuilder, false);
+
             Console.WriteLine(stringBuilder.ToString());
         }
     }

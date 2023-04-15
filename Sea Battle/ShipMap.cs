@@ -14,8 +14,8 @@ namespace Sea_Battle
         public const char unknownChar = 'X';
         public const string waterChars = "~-";
 
-        private bool[,] shipMap;
-        private bool[,] shotTilesMap;
+        public bool[,] shipMap { private set; get; }
+        public bool[,] shotTilesMap { private set; get; }
 
         public ShipMap(bool[,] shipMap)
         {
@@ -33,6 +33,11 @@ namespace Sea_Battle
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false}
             };
+        }
+
+        public void ShootTile(int x, int y)
+        {
+            shotTilesMap[y, x] = false;
         }
 
         public void RenderMap(StringBuilder stringBuilder, bool showFullMap)

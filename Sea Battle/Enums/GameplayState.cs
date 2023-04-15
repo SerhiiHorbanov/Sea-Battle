@@ -4,10 +4,10 @@
     {
         enum GameplayState
         {
-            P1PlacingShips,
-            P2PlacingShips,
+            FirstPlayerPlacingShips,
+            SecondPlayerPlacingShips,
             FirstPlayerMove,
-            P2Move,
+            SecondPlayerMove,
         }
     }
 }
