@@ -8,7 +8,6 @@ namespace Sea_Battle
 {
     struct ShipMap
     {
-        public static readonly Random random = new Random();
         public const char shotShipChar = 'X';
         public const char shipChar = 'O';
         public const char unknownChar = '#';
@@ -63,14 +62,14 @@ namespace Sea_Battle
 
                 if (isShotTile)
                 {
-                    charToAdd = isShipTile ? shotShipChar : waterChars[random.Next(0, waterChars.Length)];
+                    charToAdd = isShipTile ? shotShipChar : waterChars[Program.random.Next(0, waterChars.Length)];
                 }
                 else if (showFullMap)
                 {
                     if (isShipTile)
                         charToAdd = shipChar;
                     else
-                        charToAdd = waterChars[random.Next(0, waterChars.Length)];
+                        charToAdd = waterChars[Program.random.Next(0, waterChars.Length)];
                 }
                 stringBuilder.Append(charToAdd);
             }

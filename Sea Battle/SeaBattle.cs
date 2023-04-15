@@ -9,43 +9,20 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        private ShipMap firstPlayerMap = new ShipMap(new bool[10, 10]
-            {
-                {true, true, false, false, false, false, true, false, false, false},
-                {true, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false}
-            });
-        private ShipMap secondPlayerMap = new ShipMap(new bool[10, 10]
-            {
-                {true, true, false, false, false, false, false, false, false, false},
-                {true, false, false, false, false, true, false, false, false, false},
-                {false, false, false, false, true, false, true, false, false, false},
-                {false, false, false, true, false, false, false, true, false, false},
-                {false, false, false, false, false, false, true, false, false, false},
-                {false, false, false, false, false, true, false, false, false, false},
-                {false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, true, false, false, false, false, false},
-                {false, false, false, false, true, true, true, true, false, false},
-                {false, false, false, false, false, false, false, false, false, false}
-            });
+        private ShipMap firstPlayerMap;
+        private ShipMap secondPlayerMap;
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
 
-
+        const int startShipCount = 16;
 
         public void Start()
         {
             Console.Title = "Sea Battle";
+            RandomizeMaps();
 
             while (!endedPlaying)
             {
@@ -104,7 +81,6 @@ namespace Sea_Battle
             }
         }
 
-
         private void Render()
         {
             switch (gameplayState)
@@ -113,8 +89,6 @@ namespace Sea_Battle
                     RenderMove();
                     break;
             }
-            Console.WriteLine(XInputCord);
-            Console.WriteLine(YInputCord);
         }
 
         private void UpdateMove()
@@ -172,6 +146,31 @@ namespace Sea_Battle
 
             Console.Clear();
             Console.WriteLine(stringBuilder.ToString());
+        }
+
+        private bool[,] RandomMap()
+        {
+            bool[,] map = new bool[10, 10];
+            for (int i = 0; i < startShipCount; i++)
+            {
+                while (true)
+                {
+                    int x = Program.random.Next(0, 10);
+                    int y = Program.random.Next(0, 10);
+                    if (!map[y, x])
+                    {
+                        map[y, x] = true;
+                        break;
+                    }
+                }
+            }
+            return map;
+        }
+
+        private void RandomizeMaps()
+        {
+            firstPlayerMap = new ShipMap(RandomMap());
+            secondPlayerMap = new ShipMap(RandomMap());
         }
     }
 }
