@@ -12,13 +12,13 @@ namespace Sea_Battle
         private ShipMap firstPlayerMap = new ShipMap(new bool[10, 10]
             {
                 {true, true, false, false, false, false, true, false, false, false},
-                {true, false, false, false, false, true, true, false, false, false},
-                {false, false, false, false, true, false, true, false, false, false},
-                {false, false, false, false, false, false, true, false, false, false},
-                {false, false, false, false, false, false, true, false, false, false},
-                {false, false, false, false, false, false, true, false, false, false},
-                {false, false, false, false, false, false, true, false, false, false},
-                {false, false, false, false, false, true, true, true, false, false},
+                {true, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false},
                 {false, false, false, false, false, false, false, false, false, false}
             });
@@ -37,10 +37,9 @@ namespace Sea_Battle
             });
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
-        private bool isSecondPlayerAI;
         private bool endedPlaying = false;
-        private int YInputCord;
-        private int XInputCord;
+        private int YInputCord = -1;
+        private int XInputCord = -1;
 
 
 
@@ -57,9 +56,9 @@ namespace Sea_Battle
 
             Console.Clear();
 
-            if (gameEndResult == GameEndResult.P1Win)
+            if (gameEndResult == GameEndResult.FirstPlayerWin)
                 Console.WriteLine("first player won!");
-            else if (gameEndResult == GameEndResult.P2Win)
+            else if (gameEndResult == GameEndResult.SecondPlayerWin)
                 Console.WriteLine("second player won!");
 
             Console.WriteLine("press any button to close the game");
@@ -72,14 +71,13 @@ namespace Sea_Battle
 
             if (input.Length == 2 || input.Length == 3)
             {
-                char firstInputChar = input[input.Length - 1];
+                char firstInputChar = input[0];
                 char lastInputChar = input[input.Length - 1];
 
                 bool isFirstYCord = (firstInputChar <= 'J' && firstInputChar >= 'A');
                 bool isLastYCord = (lastInputChar <= 'J' && lastInputChar >= 'A');
                 bool isFirstXCord = (firstInputChar <= '9' && firstInputChar >= '0');
                 bool isLastXCord = (lastInputChar <= '9' && lastInputChar >= '0');
-
                 if ((isFirstYCord || isLastYCord) && (isFirstXCord || isLastXCord))
                 {
                     if (isFirstYCord)
@@ -100,7 +98,8 @@ namespace Sea_Battle
             {
                 case GameplayState.FirstPlayerMove:
                 case GameplayState.SecondPlayerMove:
-                    UpdateMove();
+                    if (XInputCord != -1)
+                        UpdateMove();
                     break;
             }
         }
@@ -125,17 +124,18 @@ namespace Sea_Battle
             
             if (currentEnemyMap.shipMap[YInputCord, XInputCord])
             {
-                CheckGameEnd(currentEnemyMap);
+                CheckGameEnd();
                 return;
             }
             gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
         }
 
-        private void CheckGameEnd(ShipMap mapToCheck)
+        private void CheckGameEnd()
         {
             bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
             bool isGameEnd = true;
 
+            ShipMap mapToCheck = isFirstPlayerMoves ? firstPlayerMap : secondPlayerMap;
 
             for (int y = 0; y < 10; y++)
             {
@@ -143,14 +143,18 @@ namespace Sea_Battle
                 {
                     bool isShotTile = mapToCheck.shotTilesMap[y, x];
                     bool isShipTile = mapToCheck.shipMap[y, x];
-                    isGameEnd = isGameEnd && (!isShotTile || isShipTile == isShotTile);
+                    isGameEnd = isGameEnd && (!isShipTile || (isShipTile && isShotTile));
                 }
 
                 if (isGameEnd)
                     break;
             }
 
-            endedPlaying = isGameEnd;
+            if (isGameEnd)
+            {
+                gameEndResult = isFirstPlayerMoves ? GameEndResult.SecondPlayerWin : GameEndResult.FirstPlayerWin;
+                endedPlaying = isGameEnd;
+            }
 
         }
 

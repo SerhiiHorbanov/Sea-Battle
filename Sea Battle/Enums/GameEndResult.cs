@@ -4,8 +4,8 @@
     {
         enum GameEndResult
         {
-            P1Win,
-            P2Win,
+            FirstPlayerWin,
+            SecondPlayerWin,
             Draw
         }
     }

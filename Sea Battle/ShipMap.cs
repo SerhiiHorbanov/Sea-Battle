@@ -37,7 +37,7 @@ namespace Sea_Battle
 
         public void ShootTile(int x, int y)
         {
-            shotTilesMap[y, x] = false;
+            shotTilesMap[y, x] = true;
         }
 
         public void RenderMap(StringBuilder stringBuilder, bool showFullMap)
