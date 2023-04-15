@@ -86,7 +86,7 @@ namespace Sea_Battle
             switch (gameplayState)
             {
                 case GameplayState.FirstPlayerMove: case GameplayState.SecondPlayerMove:
-                    RenderMove();
+                    RenderInGame();
                     break;
             }
         }
@@ -120,7 +120,7 @@ namespace Sea_Battle
                     isGameEnd = isGameEnd && (!isShipTile || (isShipTile && isShotTile));
                 }
 
-                if (isGameEnd)
+                if (!isGameEnd)
                     break;
             }
 
@@ -132,12 +132,16 @@ namespace Sea_Battle
 
         }
 
-        private void RenderMove()
+        private void RenderInGame()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
-            
+
+            stringBuilder.Append("you are player ");
+            stringBuilder.Append(gameplayState == GameplayState.FirstPlayerMove ? "1" : "2");
+            stringBuilder.Append("\n");
+
             stringBuilder.Append("this is your map:\n");
             currentPlayerMap.RenderMap(stringBuilder, true);
 
