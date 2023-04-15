@@ -9,15 +9,40 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        private ShipMap firstPlayerMap = new ShipMap(new bool[10, 10]);
-        private ShipMap secondPlayerMap = new ShipMap(new bool[10, 10]);
+        private ShipMap firstPlayerMap = new ShipMap(new bool[10, 10]
+            {
+                {true, true, false, false, false, false, true, false, false, false},
+                {true, false, false, false, false, true, true, false, false, false},
+                {false, false, false, false, true, false, true, false, false, false},
+                {false, false, false, false, false, false, true, false, false, false},
+                {false, false, false, false, false, false, true, false, false, false},
+                {false, false, false, false, false, false, true, false, false, false},
+                {false, false, false, false, false, false, true, false, false, false},
+                {false, false, false, false, false, true, true, true, false, false},
+                {false, false, false, false, false, false, false, false, false, false},
+                {false, false, false, false, false, false, false, false, false, false}
+            });
+        private ShipMap secondPlayerMap = new ShipMap(new bool[10, 10]
+            {
+                {true, true, false, false, false, false, false, false, false, false},
+                {true, false, false, false, false, true, false, false, false, false},
+                {false, false, false, false, true, false, true, false, false, false},
+                {false, false, false, true, false, false, false, true, false, false},
+                {false, false, false, false, false, false, true, false, false, false},
+                {false, false, false, false, false, true, false, false, false, false},
+                {false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, true, false, false, false, false, false},
+                {false, false, false, false, true, true, true, true, false, false},
+                {false, false, false, false, false, false, false, false, false, false}
+            });
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool isSecondPlayerAI;
         private bool endedPlaying = false;
         private int YInputCord;
         private int XInputCord;
-        private bool isStreak;
+
+
 
         public void Start()
         {
@@ -75,7 +100,7 @@ namespace Sea_Battle
             {
                 case GameplayState.FirstPlayerMove:
                 case GameplayState.SecondPlayerMove:
-                    RenderMove();
+                    UpdateMove();
                     break;
             }
         }
@@ -89,26 +114,49 @@ namespace Sea_Battle
                     RenderMove();
                     break;
             }
+            Console.WriteLine(XInputCord);
+            Console.WriteLine(YInputCord);
         }
 
         private void UpdateMove()
         {
-            ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
+            ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
             currentEnemyMap.ShootTile(XInputCord, YInputCord);
-            switch (currentEnemyMap.shipMap[YInputCord, XInputCord])
+            
+            if (currentEnemyMap.shipMap[YInputCord, XInputCord])
             {
-                
+                CheckGameEnd(currentEnemyMap);
+                return;
             }
+            gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
+        }
+
+        private void CheckGameEnd(ShipMap mapToCheck)
+        {
+            bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
+            bool isGameEnd = true;
+
+
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    bool isShotTile = mapToCheck.shotTilesMap[y, x];
+                    bool isShipTile = mapToCheck.shipMap[y, x];
+                    isGameEnd = isGameEnd && (!isShotTile || isShipTile == isShotTile);
+                }
+
+                if (isGameEnd)
+                    break;
+            }
+
+            endedPlaying = isGameEnd;
+
         }
 
         private void RenderMove()
         {
             StringBuilder stringBuilder = new StringBuilder();
-
-            //ShipMap currentPlayerMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
-            //ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
-
-            //спочатку я хотів зробити так як згори але зрозумів що так як нижче буде краще
 
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
             
@@ -118,6 +166,7 @@ namespace Sea_Battle
             stringBuilder.Append("this is your enemy's map:\n");
             currentEnemyMap.RenderMap(stringBuilder, false);
 
+            Console.Clear();
             Console.WriteLine(stringBuilder.ToString());
         }
     }

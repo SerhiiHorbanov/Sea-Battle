@@ -11,7 +11,7 @@ namespace Sea_Battle
         public static readonly Random random = new Random();
         public const char shotShipChar = 'X';
         public const char shipChar = 'O';
-        public const char unknownChar = 'X';
+        public const char unknownChar = '#';
         public const string waterChars = "~-";
 
         public bool[,] shipMap { private set; get; }
