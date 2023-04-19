@@ -12,6 +12,7 @@ namespace Sea_Battle
         public const char shipChar = 'O';
         public const char unknownChar = '#';
         public const char waterChar = '~';
+        public const char shotWaterChar = '-';
 
         public bool[,] shipMap { private set; get; }
         public bool[,] shotTilesMap { private set; get; }
@@ -63,7 +64,7 @@ namespace Sea_Battle
 
                 if (isShotTile)
                 {
-                    charToAdd = isShipTile ? shotShipChar : waterChar;
+                    charToAdd = isShipTile ? shotShipChar : shotWaterChar;
                 }
                 else if (showFullMap)
                 {

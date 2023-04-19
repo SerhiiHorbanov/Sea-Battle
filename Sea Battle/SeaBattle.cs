@@ -94,7 +94,7 @@ namespace Sea_Battle
             Console.WriteLine("update started");
             ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
             
-            bool isCurrentPlayerAI = gameplayState == (GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
+            bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
 
             int shootX = XInputCord;
             int shootY = YInputCord;
