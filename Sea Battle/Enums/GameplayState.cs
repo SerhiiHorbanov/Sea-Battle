@@ -8,6 +8,8 @@
             SecondPlayerPlacingShips,
             FirstPlayerMove,
             SecondPlayerMove,
+            ShowingMoveResultsToFirstPlayer,
+            ShowingMoveResultsToSecondPlayer,
         }
     }
 }

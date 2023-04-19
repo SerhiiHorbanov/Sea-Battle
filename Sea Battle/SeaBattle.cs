@@ -14,9 +14,11 @@ namespace Sea_Battle
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
+        private bool isFirstPlayerAI = false;
+        private bool isSecondPlayerAI = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
-
+        
         const int startShipCount = 16;
 
         public void Start()
@@ -30,16 +32,7 @@ namespace Sea_Battle
                 Input();
                 Update();
             }
-
-            Console.Clear();
-
-            if (gameEndResult == GameEndResult.FirstPlayerWin)
-                Console.WriteLine("first player won!");
-            else if (gameEndResult == GameEndResult.SecondPlayerWin)
-                Console.WriteLine("second player won!");
-
-            Console.WriteLine("press any button to close the game");
-            Console.ReadKey();
+            EndGame();
         }
 
         private void Input()
@@ -175,6 +168,19 @@ namespace Sea_Battle
         {
             firstPlayerMap = new ShipMap(RandomMap());
             secondPlayerMap = new ShipMap(RandomMap());
+        }
+
+        private void EndGame()
+        {
+            Console.Clear();
+
+            if (gameEndResult == GameEndResult.FirstPlayerWin)
+                Console.WriteLine("first player won!");
+            else if (gameEndResult == GameEndResult.SecondPlayerWin)
+                Console.WriteLine("second player won!");
+
+            Console.WriteLine("press any button to close the game");
+            Console.ReadKey();
         }
     }
 }
