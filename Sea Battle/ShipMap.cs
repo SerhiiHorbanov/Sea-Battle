@@ -11,7 +11,7 @@ namespace Sea_Battle
         public const char shotShipChar = 'X';
         public const char shipChar = 'O';
         public const char unknownChar = '#';
-        public const string waterChars = "~-";
+        public const char waterChar = '~';
 
         public bool[,] shipMap { private set; get; }
         public bool[,] shotTilesMap { private set; get; }
@@ -41,7 +41,7 @@ namespace Sea_Battle
 
         public void RenderMap(StringBuilder stringBuilder, bool showFullMap)
         {
-            stringBuilder.AppendLine(" 0123456789");
+            stringBuilder.AppendLine(" |0|1|2|3|4|5|6|7|8|9|");
             for (int y = 0; y < 10; y++)
             {
                 stringBuilder.Append((char)('A' + y));
@@ -54,24 +54,26 @@ namespace Sea_Battle
 
         private void RenderMapLine(StringBuilder stringBuilder, int y, bool showFullMap)
         {
+            stringBuilder.Append('|');
             for (int x = 0; x < 10; x++)
             {
-                char charToAdd = '#';
+                char charToAdd = '_';
                 bool isShotTile = shotTilesMap[y, x];
                 bool isShipTile = shipMap[y, x];
 
                 if (isShotTile)
                 {
-                    charToAdd = isShipTile ? shotShipChar : waterChars[Program.random.Next(0, waterChars.Length)];
+                    charToAdd = isShipTile ? shotShipChar : waterChar;
                 }
                 else if (showFullMap)
                 {
                     if (isShipTile)
                         charToAdd = shipChar;
                     else
-                        charToAdd = waterChars[Program.random.Next(0, waterChars.Length)];
+                        charToAdd = waterChar;
                 }
                 stringBuilder.Append(charToAdd);
+                stringBuilder.Append('|');
             }
         }
 

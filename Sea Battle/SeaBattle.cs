@@ -15,7 +15,7 @@ namespace Sea_Battle
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
-        private bool isSecondPlayerAI = false;
+        private bool isSecondPlayerAI = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
         
@@ -37,6 +37,9 @@ namespace Sea_Battle
 
         private void Input()
         {
+            if (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI || gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI)
+                return;
+
             string input = Console.ReadLine();
 
             if (input.Length == 2 || input.Length == 3)
@@ -58,7 +61,9 @@ namespace Sea_Battle
                     }
                     XInputCord = firstInputChar - '0';
                     YInputCord = lastInputChar - 'A';
+                    return;
                 }
+                XInputCord = -1;
             }
         }
 
@@ -86,15 +91,44 @@ namespace Sea_Battle
 
         private void UpdateMove()
         {
+            Console.WriteLine("update started");
             ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
-            currentEnemyMap.ShootTile(XInputCord, YInputCord);
             
+            bool isCurrentPlayerAI = gameplayState == (GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
+
+            int shootX = XInputCord;
+            int shootY = YInputCord;
+            if (isCurrentPlayerAI)
+            {
+                int unshotTiles = 0;
+                foreach (bool isShot in currentEnemyMap.shotTilesMap)
+                {
+                    if (!isShot)
+                        unshotTiles++;
+                }
+                int shootIndexOutOfUnshotTiles = Program.random.Next(0, unshotTiles);
+                for (int y = 0; y < 10; y++)
+                {
+                    for (int x = 0; x < 10; x++)
+                    {
+                        if (!currentEnemyMap.shotTilesMap[y, x])
+                            shootIndexOutOfUnshotTiles--;
+                        if (shootIndexOutOfUnshotTiles == 0)
+                            break;
+                    }
+                    if (shootIndexOutOfUnshotTiles == 0)
+                        break;
+                }
+            }
+
+            currentEnemyMap.ShootTile(shootX, shootY);
+
+            gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
             if (currentEnemyMap.shipMap[YInputCord, XInputCord])
             {
                 CheckGameEnd();
                 return;
             }
-            gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
         }
 
         private void CheckGameEnd()
@@ -127,6 +161,8 @@ namespace Sea_Battle
 
         private void RenderInGame()
         {
+            if (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI || gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI)
+                return;
             StringBuilder stringBuilder = new StringBuilder();
 
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
