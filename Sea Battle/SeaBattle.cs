@@ -15,11 +15,14 @@ namespace Sea_Battle
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
-        private bool isSecondPlayerAI = false;
+        private bool isSecondPlayerAI = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
         
         const int startShipCount = 16;
+
+        private bool isCurrentPlayerAI 
+            => (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
 
         public void Start()
         {
@@ -37,9 +40,61 @@ namespace Sea_Battle
 
         private void Input()
         {
+            switch (gameplayState)
+            {
+                case GameplayState.ChoosingGameMode:
+                    ChoosingGameModeInput();
+                    break;
+
+                case GameplayState.FirstPlayerMove:
+                case GameplayState.SecondPlayerMove:
+                    if (!isCurrentPlayerAI)
+                        MoveInput();
+                    break;
+            }
+        }
+
+        private void Update()
+        {
+            switch (gameplayState)
+            {
+                case GameplayState.FirstPlayerMove:
+                case GameplayState.SecondPlayerMove:
+                    bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
+                    if (isCurrentPlayerAI || XInputCord != -1)
+                        UpdateMove();
+                    break;
+            }
+        }
+
+        private void Render()
+        {
+            switch (gameplayState)
+            {
+                case GameplayState.ChoosingGameMode:
+                    RenderChoosingGameMode();
+                    break;
+
+                case GameplayState.FirstPlayerMove: 
+                case GameplayState.SecondPlayerMove:
+                    RenderInGame();
+                    break;
+            }
+        }
+
+        private void ChoosingGameModeInput()
+        {
+            string input = Console.ReadLine();
+            char firstInputChar = input[0];
+            char lastInputChar = input[input.Length - 1];
+            isFirstPlayerAI = firstInputChar == 'P' || firstInputChar == 'p';
+            isSecondPlayerAI = lastInputChar == 'P' || lastInputChar == 'p';
+        }
+
+        private void MoveInput()
+        {
             if (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI || gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI)
                 return;
-
             string input = Console.ReadLine();
 
             if (input.Length == 2 || input.Length == 3)
@@ -67,32 +122,8 @@ namespace Sea_Battle
             }
         }
 
-        private void Update()
-        {
-            switch (gameplayState)
-            {
-                case GameplayState.FirstPlayerMove:
-                case GameplayState.SecondPlayerMove:
-                    bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
-                    if (isCurrentPlayerAI || XInputCord != -1)
-                        UpdateMove();
-                    break;
-            }
-        }
-
-        private void Render()
-        {
-            switch (gameplayState)
-            {
-                case GameplayState.FirstPlayerMove: case GameplayState.SecondPlayerMove:
-                    RenderInGame();
-                    break;
-            }
-        }
-
         private void UpdateMove()
         {
-            Console.WriteLine("update started");
             ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
             
             bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
@@ -101,63 +132,60 @@ namespace Sea_Battle
             int shootY = YInputCord;
             if (isCurrentPlayerAI)
             {
-                shootX = Program.random.Next(0, 10);
-                shootY = Program.random.Next(0, 10);
-                int unshotTiles = 0;
-                foreach (bool isShot in currentEnemyMap.shotTilesMap)
-                {
-                    if (!isShot)
-                        unshotTiles++;
-                }
-                int shootIndexOutOfUnshotTiles = Program.random.Next(0, unshotTiles);
-                for (int y = 0; y < 10; y++)
-                {
-                    for (int x = 0; x < 10; x++)
-                    {
-                        if (!currentEnemyMap.shotTilesMap[y, x])
-                            shootIndexOutOfUnshotTiles--;
-                        if (shootIndexOutOfUnshotTiles == 0)
-                        {
-                            shootX = x;
-                            break;
-                        }
-                    }
-                    if (shootIndexOutOfUnshotTiles == 0)
-                    {
-                        shootY = y;
-                        break;
-                    }
-                }
+                AIChooseWhereToShoot(currentEnemyMap, out shootX, out shootY);
             }
 
             currentEnemyMap.ShootTile(shootX, shootY);
 
-            gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
+
             if (currentEnemyMap.shipMap[shootY, shootX])
             {
                 CheckGameEnd();
+            }
+            else
+            {
+                gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
+            }
+        }
+
+        private void AIChooseWhereToShoot(ShipMap currentEnemyMap, out int shootX, out int shootY)
+        {
+            shootX = Program.random.Next(0, 10);
+            shootY = Program.random.Next(0, 10);
+            int unshotTiles = 0;
+            foreach (bool isShot in currentEnemyMap.shotTilesMap)
+            {
+                if (!isShot)
+                    unshotTiles++;
+            }
+            int shootIndexOutOfUnshotTiles = Program.random.Next(0, unshotTiles);
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    if (!currentEnemyMap.shotTilesMap[y, x])
+                        shootIndexOutOfUnshotTiles--;
+                    if (shootIndexOutOfUnshotTiles == 0)
+                    {
+                        shootX = x;
+                        break;
+                    }
+                }
+                if (shootIndexOutOfUnshotTiles == 0)
+                {
+                    shootY = y;
+                    break;
+                }
             }
         }
 
         private void CheckGameEnd()
         {
             bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
-            bool isGameEnd = true;
 
             ShipMap mapToCheck = isFirstPlayerMoves ? firstPlayerMap : secondPlayerMap;
 
-            for (int y = 0; y < 10; y++)
-            {
-                for (int x = 0; x < 10; x++)
-                {
-                    bool isShotTile = mapToCheck.shotTilesMap[y, x];
-                    bool isShipTile = mapToCheck.shipMap[y, x];
-                    isGameEnd = isGameEnd && (!isShipTile || (isShipTile && isShotTile));
-                }
-
-                if (!isGameEnd)
-                    break;
-            }
+            bool isGameEnd = mapToCheck.IsLose();
 
             if (isGameEnd)
             {
@@ -187,6 +215,11 @@ namespace Sea_Battle
 
             Console.Clear();
             Console.WriteLine(stringBuilder.ToString());
+        }
+
+        private void RenderChoosingGameMode()
+        {
+            Console.WriteLine("Choose game mode (PvP or PvE or EvP or EvE)");
         }
 
         private bool[,] RandomMap()

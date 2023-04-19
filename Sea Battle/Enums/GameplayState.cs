@@ -4,6 +4,7 @@
     {
         enum GameplayState
         {
+            ChoosingGameMode,
             FirstPlayerPlacingShips,
             SecondPlayerPlacingShips,
             FirstPlayerMove,

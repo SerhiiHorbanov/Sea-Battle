@@ -78,5 +78,24 @@ namespace Sea_Battle
             }
         }
 
+        public bool IsLose()
+        {
+            bool isLose = true;
+
+            for (int y = 0; y < 10; y++)
+            {
+                for (int x = 0; x < 10; x++)
+                {
+                    bool isShotTile = shotTilesMap[y, x];
+                    bool isShipTile = shipMap[y, x];
+                    isLose = isLose && (!isShipTile || (isShipTile && isShotTile));
+                }
+
+                if (!isLose)
+                    break;
+            }
+
+            return isLose;
+        }
     }
 }
