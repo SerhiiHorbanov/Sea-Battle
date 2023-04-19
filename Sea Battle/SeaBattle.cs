@@ -14,7 +14,7 @@ namespace Sea_Battle
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
-        private bool isFirstPlayerAI = false;
+        private bool isFirstPlayerAI = true;
         private bool isSecondPlayerAI = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
@@ -92,7 +92,7 @@ namespace Sea_Battle
         private void UpdateMove()
         {
             Console.WriteLine("update started");
-            ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? firstPlayerMap : secondPlayerMap;
+            ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
             
             bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
 
@@ -114,20 +114,25 @@ namespace Sea_Battle
                         if (!currentEnemyMap.shotTilesMap[y, x])
                             shootIndexOutOfUnshotTiles--;
                         if (shootIndexOutOfUnshotTiles == 0)
+                        {
+                            XInputCord = x;
                             break;
+                        }
                     }
                     if (shootIndexOutOfUnshotTiles == 0)
+                    {
+                        shootY = y;
                         break;
+                    }
                 }
             }
 
             currentEnemyMap.ShootTile(shootX, shootY);
 
             gameplayState = gameplayState == GameplayState.FirstPlayerMove ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
-            if (currentEnemyMap.shipMap[YInputCord, XInputCord])
+            if (currentEnemyMap.shipMap[shootY, shootX])
             {
                 CheckGameEnd();
-                return;
             }
         }
 
@@ -165,7 +170,7 @@ namespace Sea_Battle
                 return;
             StringBuilder stringBuilder = new StringBuilder();
 
-            (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (secondPlayerMap, firstPlayerMap) : (firstPlayerMap, secondPlayerMap);
+            (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (firstPlayerMap, secondPlayerMap) : (secondPlayerMap, firstPlayerMap);
 
             stringBuilder.Append("you are player ");
             stringBuilder.Append(gameplayState == GameplayState.FirstPlayerMove ? "1" : "2");
