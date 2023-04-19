@@ -14,8 +14,8 @@ namespace Sea_Battle
         private GameEndResult gameEndResult = GameEndResult.Draw;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
-        private bool isFirstPlayerAI = true;
-        private bool isSecondPlayerAI = true;
+        private bool isFirstPlayerAI = false;
+        private bool isSecondPlayerAI = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
         
@@ -73,7 +73,8 @@ namespace Sea_Battle
             {
                 case GameplayState.FirstPlayerMove:
                 case GameplayState.SecondPlayerMove:
-                    if (XInputCord != -1)
+                    bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
+                    if (isCurrentPlayerAI || XInputCord != -1)
                         UpdateMove();
                     break;
             }
@@ -100,6 +101,8 @@ namespace Sea_Battle
             int shootY = YInputCord;
             if (isCurrentPlayerAI)
             {
+                shootX = Program.random.Next(0, 10);
+                shootY = Program.random.Next(0, 10);
                 int unshotTiles = 0;
                 foreach (bool isShot in currentEnemyMap.shotTilesMap)
                 {
@@ -115,7 +118,7 @@ namespace Sea_Battle
                             shootIndexOutOfUnshotTiles--;
                         if (shootIndexOutOfUnshotTiles == 0)
                         {
-                            XInputCord = x;
+                            shootX = x;
                             break;
                         }
                     }

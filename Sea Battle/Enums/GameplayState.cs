@@ -4,7 +4,6 @@
     {
         enum GameplayState
         {
-            
             FirstPlayerPlacingShips,
             SecondPlayerPlacingShips,
             FirstPlayerMove,
