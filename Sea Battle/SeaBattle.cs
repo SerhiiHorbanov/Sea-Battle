@@ -60,7 +60,6 @@ namespace Sea_Battle
             {
                 case GameplayState.FirstPlayerMove:
                 case GameplayState.SecondPlayerMove:
-                    bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
                     if (isCurrentPlayerAI || XInputCord != -1)
                         UpdateMove();
                     break;
@@ -125,8 +124,6 @@ namespace Sea_Battle
         private void UpdateMove()
         {
             ShipMap currentEnemyMap = gameplayState == GameplayState.FirstPlayerMove ? secondPlayerMap : firstPlayerMap;
-            
-            bool isCurrentPlayerAI = (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
 
             int shootX = XInputCord;
             int shootY = YInputCord;
@@ -197,7 +194,7 @@ namespace Sea_Battle
 
         private void RenderInGame()
         {
-            if (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI || gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI)
+            if (isCurrentPlayerAI)
                 return;
             StringBuilder stringBuilder = new StringBuilder();
 
