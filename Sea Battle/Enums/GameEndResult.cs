@@ -6,7 +6,7 @@
         {
             FirstPlayerWin,
             SecondPlayerWin,
-            Draw
+            None,
         }
     }
 }

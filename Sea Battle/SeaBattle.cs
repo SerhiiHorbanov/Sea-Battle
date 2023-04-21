@@ -11,7 +11,7 @@ namespace Sea_Battle
     {
         private ShipMap firstPlayerMap;
         private ShipMap secondPlayerMap;
-        private GameEndResult gameEndResult = GameEndResult.Draw;
+        private GameEndResult gameEndResult = GameEndResult.None;
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
@@ -35,7 +35,6 @@ namespace Sea_Battle
                 Input();
                 Update();
             }
-            EndGame();
         }
 
         private void Input()
@@ -62,6 +61,10 @@ namespace Sea_Battle
                 case GameplayState.SecondPlayerMove:
                     if (isCurrentPlayerAI || XInputCord != -1)
                         UpdateMove();
+
+                    break;
+                case GameplayState.RestartingGame:
+                    RestartGame();
                     break;
             }
         }
@@ -77,6 +80,9 @@ namespace Sea_Battle
                 case GameplayState.FirstPlayerMove: 
                 case GameplayState.SecondPlayerMove:
                     RenderInGame();
+                    break;
+                case GameplayState.GameEnd:
+                    GameEndRender();
                     break;
             }
         }
@@ -176,22 +182,6 @@ namespace Sea_Battle
             }
         }
 
-        private void CheckGameEnd()
-        {
-            bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
-
-            ShipMap mapToCheck = isFirstPlayerMoves ? firstPlayerMap : secondPlayerMap;
-
-            bool isGameEnd = mapToCheck.IsLose();
-
-            if (isGameEnd)
-            {
-                gameEndResult = isFirstPlayerMoves ? GameEndResult.SecondPlayerWin : GameEndResult.FirstPlayerWin;
-                endedPlaying = isGameEnd;
-            }
-
-        }
-
         private void RenderInGame()
         {
             if (isCurrentPlayerAI)
@@ -217,6 +207,18 @@ namespace Sea_Battle
         private void RenderChoosingGameMode()
         {
             Console.WriteLine("Choose game mode (PvP or PvE or EvP or EvE)");
+        }
+        
+        private void GameEndRender()
+        {
+            Console.Clear();
+
+            if (gameEndResult == GameEndResult.FirstPlayerWin)
+                Console.WriteLine("first player won!");
+            else if (gameEndResult == GameEndResult.SecondPlayerWin)
+                Console.WriteLine("second player won!");
+
+            Console.WriteLine("press R to play one more match. Press any other key to close the game");
         }
 
         private bool[,] RandomMap()
@@ -244,17 +246,25 @@ namespace Sea_Battle
             secondPlayerMap = new ShipMap(RandomMap());
         }
 
-        private void EndGame()
+        private void CheckGameEnd()
         {
-            Console.Clear();
+            bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
 
-            if (gameEndResult == GameEndResult.FirstPlayerWin)
-                Console.WriteLine("first player won!");
-            else if (gameEndResult == GameEndResult.SecondPlayerWin)
-                Console.WriteLine("second player won!");
+            ShipMap mapToCheck = isFirstPlayerMoves ? firstPlayerMap : secondPlayerMap;
 
-            Console.WriteLine("press any button to close the game");
-            Console.ReadKey();
+            bool isGameEnd = mapToCheck.IsLose();
+
+            if (isGameEnd)
+            {
+                gameEndResult = isFirstPlayerMoves ? GameEndResult.SecondPlayerWin : GameEndResult.FirstPlayerWin;
+                endedPlaying = isGameEnd;
+            }
+
+        }
+
+        private void RestartGame()
+        {
+
         }
     }
 }

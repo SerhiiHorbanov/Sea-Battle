@@ -11,6 +11,8 @@
             SecondPlayerMove,
             ShowingMoveResultsToFirstPlayer,
             ShowingMoveResultsToSecondPlayer,
+            GameEnd,
+            RestartingGame,
         }
     }
 }
