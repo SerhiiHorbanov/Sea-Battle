@@ -15,7 +15,7 @@ namespace Sea_Battle
         private GameplayState gameplayState = GameplayState.FirstPlayerMove;
         private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
-        private bool isSecondPlayerAI = true;
+        private bool isSecondPlayerAI = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
         
@@ -50,6 +50,10 @@ namespace Sea_Battle
                     if (!isCurrentPlayerAI)
                         MoveInput();
                     break;
+
+                case GameplayState.GameEnd:
+                    GameEndInput();
+                    break;
             }
         }
 
@@ -65,6 +69,10 @@ namespace Sea_Battle
                     break;
                 case GameplayState.RestartingGame:
                     RestartGame();
+                    break;
+
+                case GameplayState.GameEnd:
+                    EndGame();
                     break;
             }
         }
@@ -125,6 +133,13 @@ namespace Sea_Battle
                 }
                 XInputCord = -1;
             }
+        }
+
+        private void GameEndInput()
+        {
+            ConsoleKey input = Console.ReadKey().Key;
+            if (input == ConsoleKey.R)
+                gameplayState = GameplayState.RestartingGame;
         }
 
         private void UpdateMove()
@@ -250,21 +265,25 @@ namespace Sea_Battle
         {
             bool isFirstPlayerMoves = gameplayState == GameplayState.FirstPlayerMove;
 
-            ShipMap mapToCheck = isFirstPlayerMoves ? firstPlayerMap : secondPlayerMap;
+            ShipMap mapToCheck = isFirstPlayerMoves ? secondPlayerMap : firstPlayerMap;
 
             bool isGameEnd = mapToCheck.IsLose();
 
             if (isGameEnd)
             {
-                gameEndResult = isFirstPlayerMoves ? GameEndResult.SecondPlayerWin : GameEndResult.FirstPlayerWin;
-                endedPlaying = isGameEnd;
+                gameEndResult = isFirstPlayerMoves ? GameEndResult.FirstPlayerWin : GameEndResult.SecondPlayerWin;
+                gameplayState = GameplayState.GameEnd;
             }
-
         }
 
         private void RestartGame()
         {
+            
+        }
 
+        private void EndGame()
+        {
+            endedPlaying = true;
         }
     }
 }
