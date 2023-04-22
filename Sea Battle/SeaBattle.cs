@@ -18,11 +18,20 @@ namespace Sea_Battle
         private bool isSecondPlayerAI = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
-        
+        private int firstPlayerWins = 0;
+        private int secondPlayerWins = 0;
+
         const int startShipCount = 2;
+        const int winPointsCount = 3;
 
         private bool isCurrentPlayerAI 
             => (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
+        private bool isFirstPlayerWon
+            => firstPlayerWins >= winPointsCount;
+        private bool isSecondPlayerWon
+            => secondPlayerWins >= winPointsCount;
+        private bool isAnyoneWon
+            => isFirstPlayerWon || isSecondPlayerWon;
 
         public void Start()
         {
@@ -138,8 +147,8 @@ namespace Sea_Battle
 
         private void GameEndInput()
         {
-            ConsoleKey input = Console.ReadKey().Key;
-            if (input == ConsoleKey.R)
+            Console.ReadKey();
+            if (!isAnyoneWon)
                 gameplayState = GameplayState.RestartingGame;
         }
 
@@ -235,7 +244,14 @@ namespace Sea_Battle
             else if (gameEndResult == GameEndResult.SecondPlayerWin)
                 Console.WriteLine("second player won!");
 
-            Console.WriteLine("press R to play one more match. Press any other key to close the game");
+            if (!isAnyoneWon)
+            {
+                Console.WriteLine($"first player points: {firstPlayerWins}");
+                Console.WriteLine($"second player points: {secondPlayerWins}");
+                Console.WriteLine("press any key to play next round");
+            }
+            else
+                Console.WriteLine("press any key to close the game");
         }
 
         private bool[,] RandomMap()
@@ -274,20 +290,24 @@ namespace Sea_Battle
             if (isGameEnd)
             {
                 gameEndResult = isFirstPlayerMoves ? GameEndResult.FirstPlayerWin : GameEndResult.SecondPlayerWin;
+                if (gameEndResult == GameEndResult.FirstPlayerWin)
+                    firstPlayerWins++;
+                else
+                    secondPlayerWins++;
                 gameplayState = GameplayState.GameEnd;
             }
         }
 
         private void RestartGame()
         {
-        firstPlayerMap = new ShipMap(RandomMap());
-        secondPlayerMap = new ShipMap(RandomMap());
-        gameEndResult = GameEndResult.None;
-        gameplayState = GameplayState.ChoosingGameMode;
-        endedPlaying = false;
-        YInputCord = -1;
-        XInputCord = -1;
-    }
+            firstPlayerMap = new ShipMap(RandomMap());
+            secondPlayerMap = new ShipMap(RandomMap());
+            gameEndResult = GameEndResult.None;
+            gameplayState = GameplayState.FirstPlayerMove;
+            endedPlaying = false;
+            YInputCord = -1;
+            XInputCord = -1;
+        }
 
         private void EndGame()
         {
