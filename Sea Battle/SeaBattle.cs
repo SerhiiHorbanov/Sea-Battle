@@ -12,14 +12,14 @@ namespace Sea_Battle
         private ShipMap firstPlayerMap;
         private ShipMap secondPlayerMap;
         private GameEndResult gameEndResult = GameEndResult.None;
-        private GameplayState gameplayState = GameplayState.FirstPlayerMove;
+        private GameplayState gameplayState = GameplayState.ChoosingGameMode;
         private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
         private bool isSecondPlayerAI = false;
         private int YInputCord = -1;
         private int XInputCord = -1;
         
-        const int startShipCount = 16;
+        const int startShipCount = 2;
 
         private bool isCurrentPlayerAI 
             => (gameplayState == GameplayState.FirstPlayerMove && isFirstPlayerAI) || (gameplayState == GameplayState.SecondPlayerMove && isSecondPlayerAI);
@@ -100,8 +100,9 @@ namespace Sea_Battle
             string input = Console.ReadLine();
             char firstInputChar = input[0];
             char lastInputChar = input[input.Length - 1];
-            isFirstPlayerAI = firstInputChar == 'P' || firstInputChar == 'p';
-            isSecondPlayerAI = lastInputChar == 'P' || lastInputChar == 'p';
+            isFirstPlayerAI = !(firstInputChar == 'P' || firstInputChar == 'p');
+            isSecondPlayerAI = !(lastInputChar == 'P' || lastInputChar == 'p');
+            gameplayState = GameplayState.FirstPlayerMove;
         }
 
         private void MoveInput()
@@ -221,6 +222,7 @@ namespace Sea_Battle
 
         private void RenderChoosingGameMode()
         {
+            Console.Clear();
             Console.WriteLine("Choose game mode (PvP or PvE or EvP or EvE)");
         }
         
@@ -278,8 +280,14 @@ namespace Sea_Battle
 
         private void RestartGame()
         {
-            
-        }
+        firstPlayerMap = new ShipMap(RandomMap());
+        secondPlayerMap = new ShipMap(RandomMap());
+        gameEndResult = GameEndResult.None;
+        gameplayState = GameplayState.ChoosingGameMode;
+        endedPlaying = false;
+        YInputCord = -1;
+        XInputCord = -1;
+    }
 
         private void EndGame()
         {
