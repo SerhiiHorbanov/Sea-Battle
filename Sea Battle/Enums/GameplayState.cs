@@ -1,18 +1,15 @@
-﻿namespace Sea_Battle
+﻿namespace Sea_Battle.Enums
 {
-    namespace Enums
+    enum GameplayState
     {
-        enum GameplayState
-        {
-            ChoosingGameMode,
-            FirstPlayerPlacingShips,
-            SecondPlayerPlacingShips,
-            FirstPlayerMove,
-            SecondPlayerMove,
-            ShowingMoveResultsToFirstPlayer,
-            ShowingMoveResultsToSecondPlayer,
-            GameEnd,
-            RestartingGame,
-        }
+        ChoosingGameMode,
+        FirstPlayerPlacingShips,
+        SecondPlayerPlacingShips,
+        FirstPlayerMove,
+        SecondPlayerMove,
+        ShowingMoveResultsToFirstPlayer,
+        ShowingMoveResultsToSecondPlayer,
+        GameEnd,
+        RestartingGame,
     }
 }

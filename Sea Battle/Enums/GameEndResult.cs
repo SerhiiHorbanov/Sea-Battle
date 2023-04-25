@@ -1,12 +1,9 @@
-﻿namespace Sea_Battle
+﻿namespace Sea_Battle.Enums
 {
-    namespace Enums
+    enum GameEndResult
     {
-        enum GameEndResult
-        {
-            FirstPlayerWin,
-            SecondPlayerWin,
-            None,
-        }
+        FirstPlayerWin,
+        SecondPlayerWin,
+        None,
     }
 }

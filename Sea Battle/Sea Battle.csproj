@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="States\State.cs" />
     <Compile Include="Enums\GameEndResult.cs" />
     <Compile Include="Enums\GameplayState.cs" />
     <Compile Include="ShipMap.cs" />
@@ -53,5 +54,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
