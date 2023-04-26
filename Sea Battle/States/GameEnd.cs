@@ -6,13 +6,40 @@ using System.Threading.Tasks;
 
 namespace Sea_Battle.States
 {
-    internal class GameEnd : State
+    class GameEnd : State
     {
+        private bool isFirstPlayerWon;
+        private int firstPlayerWins;
+        private int secondPlayerWins;
+
+        public GameEnd(bool isFirstPlayerWon, int firstPlayerWins, int secondPlayerWins)
+        {
+            this.isFirstPlayerWon = isFirstPlayerWon;
+            this.firstPlayerWins = firstPlayerWins;
+            this.secondPlayerWins = secondPlayerWins;
+        }
+
         override public void Input()
         {
             Console.ReadKey();
-            if (!isAnyoneWon)
-                gameplayState = GameplayState.RestartingGame;
+            SeaBattle.SetState(new ChoosingGameMode());
+        }
+
+        public override void Update()
+        {
+            
+        }
+
+        override public void Render()
+        {
+            Console.Clear();
+
+            if (isFirstPlayerWon)
+                Console.WriteLine("first player won!");
+            else
+                Console.WriteLine("second player won!");
+
+            Console.WriteLine("press any key to play again");
         }
     }
 }

@@ -8,25 +8,26 @@ namespace Sea_Battle.States
 {
     internal class ChoosingGameMode : State
     {
+        bool isFirstPlayerAI;
+        bool isSecondPlayerAI;
         override public void Input()
         {
             string input = Console.ReadLine();
             char firstInputChar = input[0];
             char lastInputChar = input[input.Length - 1];
-            bool isFirstPlayerAI = !(firstInputChar == 'P' || firstInputChar == 'p');
-            bool  isSecondPlayerAI = !(lastInputChar == 'P' || lastInputChar == 'p');
-            SeaBattle.SetState(new PlayersMove(isFirstPlayerAI, isSecondPlayerAI));
+            isFirstPlayerAI = !(firstInputChar == 'P' || firstInputChar == 'p');
+            isSecondPlayerAI = !(lastInputChar == 'P' || lastInputChar == 'p');
         }
 
         override public void Update()
         {
-
+            SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI));
         }
 
         override public void Render()
         {
             Console.Clear();
-            Console.WriteLine("Choose game mode (PvP or PvE or EvP or EvE)\n>>>");
+            Console.Write("Choose game mode (PvP or PvE or EvP or EvE)\n>>>");
         }
     }
 }

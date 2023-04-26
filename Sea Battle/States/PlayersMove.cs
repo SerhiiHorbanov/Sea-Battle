@@ -8,28 +8,29 @@ using Sea_Battle.Enums;
 
 namespace Sea_Battle.States
 {
-    class PlayersMove : State
+    class PlayingGame : State
     {
-        private ShipMap firstPlayerMap;
-        private ShipMap secondPlayerMap;
+        private ShipMap firstPlayerMap = ShipMap.RandomMap(startShipCount);
+        private ShipMap secondPlayerMap = ShipMap.RandomMap(startShipCount);
         private GameEndResult gameEndResult = GameEndResult.None;
-        private bool endedPlaying = false;
         private bool isFirstPlayerAI = false;
         private bool isSecondPlayerAI = false;
         private bool isFirstPlayerMoves = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
         const int startShipCount = 2;
-        static public int firstPlayerWins { get; private set; } = 0;
-        static public int secondPlayerWins { get; private set; } = 0;
+        static public int firstPlayerWins { get; private set; };
+        static public int secondPlayerWins { get; private set; };
 
         private bool isCurrentPlayerAI
             => isFirstPlayerMoves ? isFirstPlayerAI : isSecondPlayerAI;
 
-        public PlayersMove(bool isFirstPlayerAI, bool isSecondPlayerAI)
+        public PlayingGame(bool isFirstPlayerAI, bool isSecondPlayerAI, int firstPlayerWinsa = 0, int secondPlayerWinsa = 0)
         {
             this.isFirstPlayerAI = isFirstPlayerAI;
             this.isSecondPlayerAI = isSecondPlayerAI;
+            firstPlayerWins = firstPlayerWinsa;
+            secondPlayerWins = secondPlayerWinsa;
         }
 
         override public void Input()
@@ -76,14 +77,13 @@ namespace Sea_Battle.States
 
             currentEnemyMap.ShootTile(shootX, shootY);
 
-
             if (currentEnemyMap.shipMap[shootY, shootX])
             {
                 CheckGameEnd();
             }
             else
             {
-                gameplayState = isFirstPlayerMoves ? GameplayState.SecondPlayerMove : GameplayState.FirstPlayerMove;
+                isFirstPlayerMoves = !isFirstPlayerMoves;
             }
         }
 
@@ -93,7 +93,7 @@ namespace Sea_Battle.States
                 return;
             StringBuilder stringBuilder = new StringBuilder();
 
-            (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = gameplayState == GameplayState.FirstPlayerMove ? (firstPlayerMap, secondPlayerMap) : (secondPlayerMap, firstPlayerMap);
+            (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = isFirstPlayerMoves ? (firstPlayerMap, secondPlayerMap) : (secondPlayerMap, firstPlayerMap);
 
             stringBuilder.Append("you are player ");
             stringBuilder.Append(isFirstPlayerMoves ? "1" : "2");
@@ -153,7 +153,7 @@ namespace Sea_Battle.States
                     firstPlayerWins++;
                 else
                     secondPlayerWins++;
-                //gameplayState = GameplayState.GameEnd;
+                SeaBattle.SetState(new GameEnd(isFirstPlayerMoves, firstPlayerWins, secondPlayerWins));
             }
         }
 

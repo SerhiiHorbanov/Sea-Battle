@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="States\ChoosingGameMode.cs" />
+    <Compile Include="States\GameEnd.cs" />
+    <Compile Include="States\PlayersMove.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="Enums\GameEndResult.cs" />
     <Compile Include="Enums\GameplayState.cs" />

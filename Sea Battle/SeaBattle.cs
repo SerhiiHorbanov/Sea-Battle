@@ -10,7 +10,6 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        private GameplayState gameplayState = GameplayState.ChoosingGameMode;
         const int winPointsCount = 3;
         static public bool endedPlaying = false;
         static public State currentState = new ChoosingGameMode();
@@ -56,24 +55,7 @@ namespace Sea_Battle
 
 
         
-        private void GameEndRender()
-        {
-            Console.Clear();
-
-            if (gameEndResult == GameEndResult.FirstPlayerWin)
-                Console.WriteLine("first player won!");
-            else if (gameEndResult == GameEndResult.SecondPlayerWin)
-                Console.WriteLine("second player won!");
-
-            if (!isAnyoneWon)
-            {
-                Console.WriteLine($"first player points: {firstPlayerWins}");
-                Console.WriteLine($"second player points: {secondPlayerWins}");
-                Console.WriteLine("press any key to play next round");
-            }
-            else
-                Console.WriteLine("press any key to close the game");
-        }
+        
 
 
         /*private void RestartGame()
