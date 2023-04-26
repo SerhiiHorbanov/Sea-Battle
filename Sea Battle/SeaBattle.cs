@@ -10,7 +10,7 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        const int winPointsCount = 3;
+        public const int winPointsCount = 3;
         static public bool endedPlaying = false;
         static public State currentState = new ChoosingGameMode();
 
@@ -29,12 +29,7 @@ namespace Sea_Battle
         public static void SetState(State state)
         {
             currentState = state;
-        }//я спочатку хотів зробити як тут нижче, але так не можна
-
-        /*public void SetState<State>()
-        {
-            currentState = new State();
-        }*/
+        }
 
         private void Input()
         {
@@ -50,23 +45,5 @@ namespace Sea_Battle
         {
             currentState.Render();
         }
-
-
-
-
-        
-        
-
-
-        /*private void RestartGame()
-        {
-            firstPlayerMap = new ShipMap(RandomMap());
-            secondPlayerMap = new ShipMap(RandomMap());
-            gameEndResult = GameEndResult.None;
-            gameplayState = GameplayState.FirstPlayerMove;
-            endedPlaying = false;
-            YInputCord = -1;
-            XInputCord = -1;
-        }*/
     }
 }

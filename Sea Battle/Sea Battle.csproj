@@ -45,10 +45,9 @@
   <ItemGroup>
     <Compile Include="States\ChoosingGameMode.cs" />
     <Compile Include="States\GameEnd.cs" />
-    <Compile Include="States\PlayersMove.cs" />
+    <Compile Include="States\PlayingGame.cs" />
     <Compile Include="States\State.cs" />
     <Compile Include="Enums\GameEndResult.cs" />
-    <Compile Include="Enums\GameplayState.cs" />
     <Compile Include="ShipMap.cs" />
     <Compile Include="SeaBattle.cs" />
     <Compile Include="Program.cs" />

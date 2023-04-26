@@ -19,18 +19,18 @@ namespace Sea_Battle.States
         private int YInputCord = -1;
         private int XInputCord = -1;
         const int startShipCount = 2;
-        static public int firstPlayerWins { get; private set; };
-        static public int secondPlayerWins { get; private set; };
+        static public int firstPlayerWins { get; private set; }
+        static public int secondPlayerWins { get; private set; }
 
         private bool isCurrentPlayerAI
             => isFirstPlayerMoves ? isFirstPlayerAI : isSecondPlayerAI;
 
-        public PlayingGame(bool isFirstPlayerAI, bool isSecondPlayerAI, int firstPlayerWinsa = 0, int secondPlayerWinsa = 0)
+        public PlayingGame(bool isFirstPlayerAI, bool isSecondPlayerAI, int _firstPlayerWins = 0, int _secondPlayerWins = 0)
         {
             this.isFirstPlayerAI = isFirstPlayerAI;
             this.isSecondPlayerAI = isSecondPlayerAI;
-            firstPlayerWins = firstPlayerWinsa;
-            secondPlayerWins = secondPlayerWinsa;
+            firstPlayerWins = _firstPlayerWins;
+            secondPlayerWins = _secondPlayerWins;
         }
 
         override public void Input()
@@ -153,14 +153,8 @@ namespace Sea_Battle.States
                     firstPlayerWins++;
                 else
                     secondPlayerWins++;
-                SeaBattle.SetState(new GameEnd(isFirstPlayerMoves, firstPlayerWins, secondPlayerWins));
+                SeaBattle.SetState(new GameEnd(gameEndResult, firstPlayerWins, secondPlayerWins, isFirstPlayerAI, isSecondPlayerAI));
             }
-        }
-
-        private void RandomizeMaps()
-        {
-            firstPlayerMap = ShipMap.RandomMap(startShipCount);
-            secondPlayerMap = ShipMap.RandomMap(startShipCount);
         }
     }
 }

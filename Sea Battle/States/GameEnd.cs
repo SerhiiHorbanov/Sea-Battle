@@ -4,25 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Sea_Battle.Enums;
+
 namespace Sea_Battle.States
 {
     class GameEnd : State
     {
-        private bool isFirstPlayerWon;
+        private GameEndResult gameEndResult;
         private int firstPlayerWins;
         private int secondPlayerWins;
+        private bool isFirstPlayerAI;
+        private bool isSecondPlayerAI;
+        private bool isAnyoneWon
+            => firstPlayerWins >= SeaBattle.winPointsCount || secondPlayerWins >= SeaBattle.winPointsCount;
 
-        public GameEnd(bool isFirstPlayerWon, int firstPlayerWins, int secondPlayerWins)
+        public GameEnd(GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, bool isFirstPlayerAI, bool isSecondPlayerAI)
         {
-            this.isFirstPlayerWon = isFirstPlayerWon;
+            this.gameEndResult = gameEndResult;
             this.firstPlayerWins = firstPlayerWins;
             this.secondPlayerWins = secondPlayerWins;
+            this.isFirstPlayerAI = isFirstPlayerAI;
+            this.isSecondPlayerAI = isSecondPlayerAI;
         }
 
         override public void Input()
         {
-            Console.ReadKey();
-            SeaBattle.SetState(new ChoosingGameMode());
+            ConsoleKey input = Console.ReadKey().Key;
+
+            if (!isAnyoneWon)
+                SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI, firstPlayerWins, secondPlayerWins));
+
+            if (input == ConsoleKey.R)
+                SeaBattle.SetState(new ChoosingGameMode());
         }
 
         public override void Update()
@@ -34,12 +47,17 @@ namespace Sea_Battle.States
         {
             Console.Clear();
 
-            if (isFirstPlayerWon)
+            if (gameEndResult == GameEndResult.FirstPlayerWin)
                 Console.WriteLine("first player won!");
             else
                 Console.WriteLine("second player won!");
 
-            Console.WriteLine("press any key to play again");
+            Console.WriteLine($"first player wins: {firstPlayerWins}");
+            Console.WriteLine($"second player wins: {secondPlayerWins}");
+
+            if (!isAnyoneWon)
+                Console.WriteLine("press any key to play again");
+            Console.WriteLine("press R to play another match");
         }
     }
 }
