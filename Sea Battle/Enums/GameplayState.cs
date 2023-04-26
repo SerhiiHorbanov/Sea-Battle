@@ -1,15 +1,19 @@
 ﻿namespace Sea_Battle.Enums
 {
+    //dun
+    //kinda dun
+    //wokin
+    //gotta wok on
     enum GameplayState
     {
-        ChoosingGameMode,
+        ChoosingGameMode,//dun
         FirstPlayerPlacingShips,
         SecondPlayerPlacingShips,
-        FirstPlayerMove,
-        SecondPlayerMove,
+        FirstPlayerMove,//kinda dun
+        SecondPlayerMove,//kinda dun
         ShowingMoveResultsToFirstPlayer,
         ShowingMoveResultsToSecondPlayer,
-        GameEnd,
+        GameEnd,//wokin on
         RestartingGame,
     }
 }

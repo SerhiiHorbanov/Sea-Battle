@@ -35,6 +35,25 @@ namespace Sea_Battle
             };
         }
 
+        static public ShipMap RandomMap(int startShipCount)
+        {
+            bool[,] map = new bool[10, 10];
+            for (int i = 0; i < startShipCount; i++)
+            {
+                while (true)
+                {
+                    int x = Program.random.Next(0, 10);
+                    int y = Program.random.Next(0, 10);
+                    if (!map[y, x])
+                    {
+                        map[y, x] = true;
+                        break;
+                    }
+                }
+            }
+            return new ShipMap(map);
+        }
+
         public void ShootTile(int x, int y)
         {
             shotTilesMap[y, x] = true;

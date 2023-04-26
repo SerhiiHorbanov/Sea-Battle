@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Sea_Battle.States
 {
-    class State
+    abstract class State
     {
-
+        public abstract void Render();
+        public abstract void Input();
+        public abstract void Update();
     }
 }
