@@ -15,6 +15,7 @@ namespace Sea_Battle.States
         private int secondPlayerWins;
         private bool isFirstPlayerAI;
         private bool isSecondPlayerAI;
+        private ConsoleKey input;
         private bool isAnyoneWon
             => firstPlayerWins >= SeaBattle.winPointsCount || secondPlayerWins >= SeaBattle.winPointsCount;
 
@@ -29,18 +30,27 @@ namespace Sea_Battle.States
 
         override public void Input()
         {
-            ConsoleKey input = Console.ReadKey().Key;
-
-            if (!isAnyoneWon)
-                SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI, firstPlayerWins, secondPlayerWins));
-
-            if (input == ConsoleKey.R)
-                SeaBattle.SetState(new ChoosingGameMode());
+            input = Console.ReadKey().Key;
         }
 
         public override void Update()
         {
-            
+            if (input == ConsoleKey.R)
+            {
+                SeaBattle.SetState(new ChoosingGameMode());
+                return;
+            }
+
+            else if (!isAnyoneWon)
+            {
+                SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI, firstPlayerWins, secondPlayerWins));
+            }
+
+            else
+            {
+                SeaBattle.endedPlaying = true;
+            }
+
         }
 
         override public void Render()
