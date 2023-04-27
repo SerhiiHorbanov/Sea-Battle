@@ -10,7 +10,6 @@ namespace Sea_Battle
 {
     class SeaBattle
     {
-        public const int winPointsCount = 3;
         static public bool endedPlaying = false;
         static public State currentState = new ChoosingGameMode();
 

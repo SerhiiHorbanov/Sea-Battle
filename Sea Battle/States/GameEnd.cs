@@ -13,17 +13,19 @@ namespace Sea_Battle.States
         private GameEndResult gameEndResult;
         private int firstPlayerWins;
         private int secondPlayerWins;
+        private int WinPointsCount;
         private bool isFirstPlayerAI;
         private bool isSecondPlayerAI;
         private ConsoleKey input;
         private bool isAnyoneWon
-            => firstPlayerWins >= SeaBattle.winPointsCount || secondPlayerWins >= SeaBattle.winPointsCount;
+            => firstPlayerWins >= WinPointsCount || secondPlayerWins >= WinPointsCount;
 
-        public GameEnd(GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, bool isFirstPlayerAI, bool isSecondPlayerAI)
+        public GameEnd(GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, int winPointsCount, bool isFirstPlayerAI, bool isSecondPlayerAI)
         {
             this.gameEndResult = gameEndResult;
             this.firstPlayerWins = firstPlayerWins;
             this.secondPlayerWins = secondPlayerWins;
+            this.WinPointsCount = winPointsCount;
             this.isFirstPlayerAI = isFirstPlayerAI;
             this.isSecondPlayerAI = isSecondPlayerAI;
         }

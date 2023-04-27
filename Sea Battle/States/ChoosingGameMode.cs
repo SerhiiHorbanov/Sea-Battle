@@ -21,7 +21,7 @@ namespace Sea_Battle.States
 
         override public void Update()
         {
-            SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI));
+            SeaBattle.SetState(new ChoosingRoundCount(isFirstPlayerAI, isSecondPlayerAI));
         }
 
         override public void Render()

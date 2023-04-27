@@ -13,11 +13,12 @@ namespace Sea_Battle.States
         private ShipMap firstPlayerMap = ShipMap.RandomMap(startShipCount);
         private ShipMap secondPlayerMap = ShipMap.RandomMap(startShipCount);
         private GameEndResult gameEndResult = GameEndResult.None;
-        private bool isFirstPlayerAI = false;
-        private bool isSecondPlayerAI = false;
+        private bool isFirstPlayerAI;
+        private bool isSecondPlayerAI;
         private bool isFirstPlayerMoves = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
+        private int WinPointsCount;
         const int startShipCount = 2;
         static public int firstPlayerWins { get; private set; }
         static public int secondPlayerWins { get; private set; }
@@ -25,10 +26,11 @@ namespace Sea_Battle.States
         private bool isCurrentPlayerAI
             => isFirstPlayerMoves ? isFirstPlayerAI : isSecondPlayerAI;
 
-        public PlayingGame(bool isFirstPlayerAI, bool isSecondPlayerAI, int _firstPlayerWins = 0, int _secondPlayerWins = 0)
+        public PlayingGame(bool isFirstPlayerAI, bool isSecondPlayerAI, int matchCount, int _firstPlayerWins = 0, int _secondPlayerWins = 0)
         {
             this.isFirstPlayerAI = isFirstPlayerAI;
             this.isSecondPlayerAI = isSecondPlayerAI;
+            this.WinPointsCount = matchCount;
             firstPlayerWins = _firstPlayerWins;
             secondPlayerWins = _secondPlayerWins;
         }
@@ -153,7 +155,7 @@ namespace Sea_Battle.States
                     firstPlayerWins++;
                 else
                     secondPlayerWins++;
-                SeaBattle.SetState(new GameEnd(gameEndResult, firstPlayerWins, secondPlayerWins, isFirstPlayerAI, isSecondPlayerAI));
+                SeaBattle.SetState(new GameEnd(gameEndResult, firstPlayerWins, secondPlayerWins, WinPointsCount, isFirstPlayerAI, isSecondPlayerAI));
             }
         }
     }

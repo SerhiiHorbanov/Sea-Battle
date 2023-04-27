@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="States\ChoosingGameMode.cs" />
+    <Compile Include="States\ChoosingRoundCount.cs" />
     <Compile Include="States\GameEnd.cs" />
     <Compile Include="States\PlayingGame.cs" />
     <Compile Include="States\State.cs" />
