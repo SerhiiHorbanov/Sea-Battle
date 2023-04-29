@@ -10,7 +10,7 @@ namespace Sea_Battle.States
     {
         bool isFirstPlayerAI;
         bool isSecondPlayerAI;
-        int matchCount = 0;
+        int winPointsCount = 0;
         bool canParseInput;
 
         public ChoosingRoundCount(bool isFirstPlayerAI, bool isSecondPlayerAI)
@@ -22,7 +22,7 @@ namespace Sea_Battle.States
         override public void Input()
         {
             string input = Console.ReadLine();
-            if (int.TryParse(input, out matchCount))
+            if (int.TryParse(input, out winPointsCount))
             {
                 canParseInput = true;
             }
@@ -31,7 +31,7 @@ namespace Sea_Battle.States
         override public void Update()
         {
             if (canParseInput)
-                SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI, matchCount));
+                SeaBattle.SetState(new ChoosingNicknames(isFirstPlayerAI, isSecondPlayerAI, winPointsCount));
         }
 
         override public void Render()

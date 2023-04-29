@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="States\ChoosingNicknames.cs" />
+    <Compile Include="ProfileData.cs" />
     <Compile Include="States\ChoosingGameMode.cs" />
     <Compile Include="States\ChoosingRoundCount.cs" />
     <Compile Include="States\GameEnd.cs" />

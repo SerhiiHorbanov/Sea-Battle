@@ -10,22 +10,26 @@ namespace Sea_Battle.States
 {
     class GameEnd : State
     {
+        private ProfileData firstPlayerProfile;
+        private ProfileData secondPlayerProfile;
         private GameEndResult gameEndResult;
         private int firstPlayerWins;
         private int secondPlayerWins;
-        private int WinPointsCount;
+        private int winPointsCount;
         private bool isFirstPlayerAI;
         private bool isSecondPlayerAI;
         private ConsoleKey input;
         private bool isAnyoneWon
-            => firstPlayerWins >= WinPointsCount || secondPlayerWins >= WinPointsCount;
+            => firstPlayerWins >= winPointsCount || secondPlayerWins >= winPointsCount;
 
-        public GameEnd(GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, int winPointsCount, bool isFirstPlayerAI, bool isSecondPlayerAI)
+        public GameEnd(ProfileData firstPlayerProfile, ProfileData secondPlayerProfile, GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, int winPointsCount, bool isFirstPlayerAI, bool isSecondPlayerAI)
         {
+            this.firstPlayerProfile = firstPlayerProfile;
+            this.secondPlayerProfile = secondPlayerProfile;
             this.gameEndResult = gameEndResult;
             this.firstPlayerWins = firstPlayerWins;
             this.secondPlayerWins = secondPlayerWins;
-            this.WinPointsCount = winPointsCount;
+            this.winPointsCount = winPointsCount;
             this.isFirstPlayerAI = isFirstPlayerAI;
             this.isSecondPlayerAI = isSecondPlayerAI;
         }
@@ -37,6 +41,9 @@ namespace Sea_Battle.States
 
         public override void Update()
         {
+            ProfileData.SaveProfileToFile(firstPlayerProfile);
+            ProfileData.SaveProfileToFile(secondPlayerProfile);
+
             if (input == ConsoleKey.R)
             {
                 SeaBattle.SetState(new ChoosingGameMode());
@@ -45,7 +52,7 @@ namespace Sea_Battle.States
 
             else if (!isAnyoneWon)
             {
-                SeaBattle.SetState(new PlayingGame(isFirstPlayerAI, isSecondPlayerAI, firstPlayerWins, secondPlayerWins));
+                SeaBattle.SetState(new PlayingGame(firstPlayerProfile, secondPlayerProfile, isFirstPlayerAI, isSecondPlayerAI, winPointsCount, firstPlayerWins, secondPlayerWins));
             }
 
             else

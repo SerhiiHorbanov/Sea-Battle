@@ -35,15 +35,20 @@ namespace Sea_Battle
             fileStream.Close();
         }
 
-        public static ProfileData LoadProfileFromFile(string nickname)
+        public static ProfileData LoadProfileFromFile(string profileFilePath)
         {
-            FileStream fileStream = new FileStream(nickname + ".xml", FileMode.OpenOrCreate);
-
             XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProfileData));
-            ProfileData profile = (ProfileData)xmlSerializer.Deserialize(fileStream);
+            FileStream fileStream = new FileStream(profileFilePath, FileMode.OpenOrCreate);
 
-            fileStream.Close();
-            return profile;
+            try
+            {
+                ProfileData profile = (ProfileData)xmlSerializer.Deserialize(fileStream);
+                return profile;
+            }
+            catch
+            {
+                return new ProfileData();
+            }
         }
 
         public override string ToString()
