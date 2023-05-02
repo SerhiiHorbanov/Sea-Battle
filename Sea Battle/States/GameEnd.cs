@@ -34,7 +34,7 @@ namespace Sea_Battle.States
             this.isSecondPlayerAI = isSecondPlayerAI;
         }
 
-        override public void Input()
+        public override void Input()
         {
             input = Console.ReadKey().Key;
         }
@@ -62,7 +62,7 @@ namespace Sea_Battle.States
 
         }
 
-        override public void Render()
+        public override void Render()
         {
             Console.Clear();
 

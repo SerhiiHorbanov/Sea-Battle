@@ -19,7 +19,7 @@ namespace Sea_Battle.States
             this.isSecondPlayerAI = isSecondPlayerAI;
         }
 
-        override public void Input()
+        public override void Input()
         {
             string input = Console.ReadLine();
             if (int.TryParse(input, out winPointsCount))

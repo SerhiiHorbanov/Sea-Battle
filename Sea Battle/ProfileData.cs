@@ -8,13 +8,22 @@ using System.Xml.Serialization;
 
 namespace Sea_Battle
 {
-    public struct ProfileData
+    public class ProfileData
     {
         public string nickname;
         public int winMatches;
         public int winRounds;
         public int loseMatches;
         public int loseRounds;
+
+        public ProfileData()
+        {
+            nickname = "unknown";
+            winRounds = 0;
+            winMatches = 0;
+            loseRounds = 0;
+            loseMatches = 0;
+        }
 
         public ProfileData(string nickname, int winRounds = 0, int winMatches = 0, int loseRounds = 0, int loseMatches = 0)
         {
@@ -43,10 +52,12 @@ namespace Sea_Battle
             try
             {
                 ProfileData profile = (ProfileData)xmlSerializer.Deserialize(fileStream);
+                fileStream.Close();
                 return profile;
             }
             catch
             {
+                fileStream.Close();
                 return new ProfileData();
             }
         }

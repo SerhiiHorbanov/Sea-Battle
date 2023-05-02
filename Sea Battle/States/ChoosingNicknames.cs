@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Sea_Battle.States
 {
@@ -22,14 +23,18 @@ namespace Sea_Battle.States
             this.winPointsCount = winPointsCount;
         }
 
-        override public void Input()
+        public override void Input()
         {
             string input = Console.ReadLine();
-            if (isFirstPlayerChoosingNickname)
-                firstPlayerProfile = ProfileData.LoadProfileFromFile(input + ".xml");
-            else
-                secondPlayerProfile = ProfileData.LoadProfileFromFile(input + ".xml");
+            string path = input + ".xml";
 
+            if (!File.Exists(path))
+                ProfileData.SaveProfileToFile(new ProfileData(input));
+
+            if (isFirstPlayerChoosingNickname)
+                firstPlayerProfile = ProfileData.LoadProfileFromFile(path);
+            else
+                secondPlayerProfile = ProfileData.LoadProfileFromFile(path);
         }
 
         override public void Update()
@@ -45,7 +50,7 @@ namespace Sea_Battle.States
         override public void Render()
         {
             Console.Clear();
-            Console.Write("Ener your nickname\n>>>");
+            Console.Write("Enter your nickname\n>>>");
         }
     }
 }

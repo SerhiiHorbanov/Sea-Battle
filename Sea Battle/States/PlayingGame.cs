@@ -40,7 +40,7 @@ namespace Sea_Battle.States
             this.secondPlayerProfile = secondPlayerProfile;
         }
 
-        override public void Input()
+        public override void Input()
         {
             if (isCurrentPlayerAI)
                 return;
@@ -71,7 +71,7 @@ namespace Sea_Battle.States
             }
         }
 
-        override public void Update()
+        public override void Update()
         {
             ShipMap currentEnemyMap = isFirstPlayerMoves ? secondPlayerMap : firstPlayerMap;
 
@@ -94,7 +94,7 @@ namespace Sea_Battle.States
             }
         }
 
-        override public void Render()
+        public override void Render()
         {
             if (isCurrentPlayerAI)
                 return;

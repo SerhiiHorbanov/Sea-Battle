@@ -10,7 +10,7 @@ namespace Sea_Battle.States
     {
         bool isFirstPlayerAI;
         bool isSecondPlayerAI;
-        override public void Input()
+        public override void Input()
         {
             string input = Console.ReadLine();
             char firstInputChar = input[0];
@@ -19,12 +19,12 @@ namespace Sea_Battle.States
             isSecondPlayerAI = !(lastInputChar == 'P' || lastInputChar == 'p');
         }
 
-        override public void Update()
+        public override void Update()
         {
             SeaBattle.SetState(new ChoosingRoundCount(isFirstPlayerAI, isSecondPlayerAI));
         }
 
-        override public void Render()
+        public override void Render()
         {
             Console.Clear();
             Console.Write("Choose game mode (PvP or PvE or EvP or EvE)\n>>>");
