@@ -10,28 +10,16 @@ namespace Sea_Battle.States
 {
     class GameEnd : State
     {
-        private ProfileData firstPlayerProfile;
-        private ProfileData secondPlayerProfile;
         private GameEndResult gameEndResult;
-        private int firstPlayerWins;
-        private int secondPlayerWins;
-        private int winPointsCount;
-        private bool isFirstPlayerAI;
-        private bool isSecondPlayerAI;
+        private MatchData matchData;
         private ConsoleKey input;
         private bool isAnyoneWon
-            => firstPlayerWins >= winPointsCount || secondPlayerWins >= winPointsCount;
+            => matchData.firstPlayerWins >= matchData.winPointsCount || matchData.secondPlayerWins >= matchData.winPointsCount;
 
-        public GameEnd(ProfileData firstPlayerProfile, ProfileData secondPlayerProfile, GameEndResult gameEndResult, int firstPlayerWins, int secondPlayerWins, int winPointsCount, bool isFirstPlayerAI, bool isSecondPlayerAI)
+        public GameEnd(MatchData matchData, GameEndResult gameEndResult)
         {
-            this.firstPlayerProfile = firstPlayerProfile;
-            this.secondPlayerProfile = secondPlayerProfile;
+            this.matchData = matchData;
             this.gameEndResult = gameEndResult;
-            this.firstPlayerWins = firstPlayerWins;
-            this.secondPlayerWins = secondPlayerWins;
-            this.winPointsCount = winPointsCount;
-            this.isFirstPlayerAI = isFirstPlayerAI;
-            this.isSecondPlayerAI = isSecondPlayerAI;
         }
 
         public override void Input()
@@ -41,8 +29,8 @@ namespace Sea_Battle.States
 
         public override void Update()
         {
-            ProfileData.SaveProfileToFile(firstPlayerProfile);
-            ProfileData.SaveProfileToFile(secondPlayerProfile);
+            ProfileData.SaveProfileToFile(matchData.firstPlayerProfile);
+            ProfileData.SaveProfileToFile(matchData.secondPlayerProfile);
 
             if (input == ConsoleKey.R)
             {
@@ -52,7 +40,7 @@ namespace Sea_Battle.States
 
             else if (!isAnyoneWon)
             {
-                SeaBattle.SetState(new PlayingGame(firstPlayerProfile, secondPlayerProfile, isFirstPlayerAI, isSecondPlayerAI, winPointsCount, firstPlayerWins, secondPlayerWins));
+                SeaBattle.SetState(new PlayingGame(matchData));
             }
 
             else
@@ -71,8 +59,8 @@ namespace Sea_Battle.States
             else
                 Console.WriteLine("second player won!");
 
-            Console.WriteLine($"first player wins: {firstPlayerWins}");
-            Console.WriteLine($"second player wins: {secondPlayerWins}");
+            Console.WriteLine($"first player wins: {matchData.firstPlayerWins}");
+            Console.WriteLine($"second player wins: {matchData.secondPlayerWins}");
 
             if (!isAnyoneWon)
                 Console.WriteLine("press any key to play again");

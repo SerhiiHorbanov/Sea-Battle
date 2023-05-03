@@ -41,7 +41,7 @@ namespace Sea_Battle.States
         {
             if (!isFirstPlayerChoosingNickname)
             {
-                SeaBattle.SetState(new PlayingGame(firstPlayerProfile, secondPlayerProfile, isFirstPlayerAI, isSecondPlayerAI, winPointsCount));
+                SeaBattle.SetState(new PlayingGame(new MatchData(firstPlayerProfile, secondPlayerProfile, isFirstPlayerAI, isSecondPlayerAI, winPointsCount)));
                 return;
             }
             isFirstPlayerChoosingNickname = false;

@@ -10,34 +10,21 @@ namespace Sea_Battle.States
 {
     class PlayingGame : State
     {
-
-        private ProfileData firstPlayerProfile;
-        private ProfileData secondPlayerProfile;
         private ShipMap firstPlayerMap = ShipMap.RandomMap(startShipCount);
         private ShipMap secondPlayerMap = ShipMap.RandomMap(startShipCount);
         private GameEndResult gameEndResult = GameEndResult.None;
-        private bool isFirstPlayerAI;
-        private bool isSecondPlayerAI;
         private bool isFirstPlayerMoves = true;
         private int YInputCord = -1;
         private int XInputCord = -1;
-        private int winPointsCount;
         const int startShipCount = 2;
-        static public int firstPlayerWins { get; private set; }
-        static public int secondPlayerWins { get; private set; }
+        private MatchData matchData;
 
         private bool isCurrentPlayerAI
-            => isFirstPlayerMoves ? isFirstPlayerAI : isSecondPlayerAI;
+            => isFirstPlayerMoves ? matchData.isFirstPlayerAI : matchData.isSecondPlayerAI;
 
-        public PlayingGame(ProfileData firstPlayerProfile, ProfileData secondPlayerProfile, bool isFirstPlayerAI, bool isSecondPlayerAI, int winPointsCount, int _firstPlayerWins = 0, int _secondPlayerWins = 0)
+        public PlayingGame(MatchData matchData)
         {
-            this.isFirstPlayerAI = isFirstPlayerAI;
-            this.isSecondPlayerAI = isSecondPlayerAI;
-            this.winPointsCount = winPointsCount;
-            firstPlayerWins = _firstPlayerWins;
-            secondPlayerWins = _secondPlayerWins;
-            this.firstPlayerProfile = firstPlayerProfile;
-            this.secondPlayerProfile = secondPlayerProfile;
+            this.matchData = matchData;
         }
 
         public override void Input()
@@ -101,9 +88,9 @@ namespace Sea_Battle.States
             StringBuilder stringBuilder = new StringBuilder();
 
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = isFirstPlayerMoves ? (firstPlayerMap, secondPlayerMap) : (secondPlayerMap, firstPlayerMap);
-
-            stringBuilder.Append("you are player ");
-            stringBuilder.Append(isFirstPlayerMoves ? "1" : "2");
+            
+            stringBuilder.Append($"you are ");
+            stringBuilder.Append(isFirstPlayerMoves? matchData.firstPlayerProfile.nickname : matchData.secondPlayerProfile.nickname);
             stringBuilder.Append("\n");
 
             stringBuilder.Append("this is your map:\n");
@@ -158,19 +145,13 @@ namespace Sea_Battle.States
                 gameEndResult = isFirstPlayerMoves ? GameEndResult.FirstPlayerWin : GameEndResult.SecondPlayerWin;
                 if (gameEndResult == GameEndResult.FirstPlayerWin)
                 {
-                    firstPlayerWins++;
-
-                    firstPlayerProfile.WinRound();
-                    secondPlayerProfile.LoseRound();
+                    matchData.FirstPlayerWon();
                 }
                 else
                 {
-                    secondPlayerWins++;
-
-                    secondPlayerProfile.WinRound();
-                    firstPlayerProfile.LoseRound();
+                    matchData.SecondPlayerWon();
                 }
-                SeaBattle.SetState(new GameEnd(firstPlayerProfile, secondPlayerProfile, gameEndResult, firstPlayerWins, secondPlayerWins, winPointsCount, isFirstPlayerAI, isSecondPlayerAI));
+                SeaBattle.SetState(new GameEnd(matchData, gameEndResult));
             }
         }
     }
