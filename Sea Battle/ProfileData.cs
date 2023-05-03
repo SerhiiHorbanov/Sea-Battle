@@ -65,6 +65,9 @@ namespace Sea_Battle
         public override string ToString()
             => $"nickname = {nickname}\nwinRounds = {winRounds}\nwinMatches = {winMatches}\nloseRounds = {loseRounds}\nloseMatches = {loseMatches}";
 
+        public string Description
+            => $"{nickname}\nyou won {winRounds} rounds and {winMatches} matches\nyou lost {loseRounds} rounds and {loseMatches} matches";
+
         public void WinMatch()
             => winMatches++;
         public void WinRound()
