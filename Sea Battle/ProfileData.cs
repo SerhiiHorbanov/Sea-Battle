@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
+using Newtonsoft.Json;
 
 namespace Sea_Battle
 {
@@ -15,6 +16,8 @@ namespace Sea_Battle
         public int winRounds;
         public int loseMatches;
         public int loseRounds;
+
+        private static string profilesFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\DomikNaDerevi\\Sea-Battle\\profiles";
 
         public ProfileData()
         {
@@ -34,38 +37,52 @@ namespace Sea_Battle
             this.loseMatches = loseMatches;
         }
 
-        public static void SaveProfileToFile(ProfileData profile)
+        public static void CheckPlayersFolder()
         {
-            FileStream fileStream = new FileStream(profile.nickname + ".xml", FileMode.OpenOrCreate);
-
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProfileData));
-            xmlSerializer.Serialize(fileStream, profile);
-
-            fileStream.Close();
+            if (!Directory.Exists(profilesFolderPath))
+                Directory.CreateDirectory(profilesFolderPath);
         }
 
-        public static ProfileData LoadProfileFromFile(string profileFilePath)
+        public static void SaveProfile(ProfileData profile)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(ProfileData));
-            FileStream fileStream = new FileStream(profileFilePath, FileMode.OpenOrCreate);
+            CheckPlayersFolder();
+            string path = PathForProfileWithNickname(profile.nickname);
 
+            StreamWriter streamWriter = new StreamWriter(path);
+
+            string json = JsonConvert.SerializeObject(profile);
+
+            streamWriter.Write(json);
+
+            streamWriter.Close();
+        }
+
+        public static ProfileData LoadProfile(string nickname)
+        {
+            CheckPlayersFolder();
+            string path = PathForProfileWithNickname(nickname);
             try
             {
-                ProfileData profile = (ProfileData)xmlSerializer.Deserialize(fileStream);
-                fileStream.Close();
+                ProfileData profile = JsonConvert.DeserializeObject<ProfileData>(File.ReadAllText(path));
+
+                if (profile == null)
+                    return new ProfileData();
+
                 return profile;
             }
             catch
             {
-                fileStream.Close();
                 return new ProfileData();
             }
         }
 
+        public static string PathForProfileWithNickname(string nickname)
+            => Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\DomikNaDerevi\\Sea-Battle\\profiles\\" + nickname + ".json";
+
         public override string ToString()
             => $"nickname = {nickname}\nwinRounds = {winRounds}\nwinMatches = {winMatches}\nloseRounds = {loseRounds}\nloseMatches = {loseMatches}";
 
-        public string Description
+        public string GetDescription()
             => $"{nickname}\nyou won {winRounds} rounds and {winMatches} matches\nyou lost {loseRounds} rounds and {loseMatches} matches";
 
         public void WinMatch()

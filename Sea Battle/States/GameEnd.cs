@@ -29,8 +29,8 @@ namespace Sea_Battle.States
 
         public override void Update()
         {
-            ProfileData.SaveProfileToFile(matchData.firstPlayerProfile);
-            ProfileData.SaveProfileToFile(matchData.secondPlayerProfile);
+            ProfileData.SaveProfile(matchData.firstPlayerProfile);
+            ProfileData.SaveProfile(matchData.secondPlayerProfile);
 
             if (input == ConsoleKey.R)
             {

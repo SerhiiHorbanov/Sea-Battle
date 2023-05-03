@@ -26,15 +26,15 @@ namespace Sea_Battle.States
         public override void Input()
         {
             string input = Console.ReadLine();
-            string path = input + ".xml";
+            string path = ProfileData.PathForProfileWithNickname(input);
 
             if (!File.Exists(path))
-                ProfileData.SaveProfileToFile(new ProfileData(input));
+                ProfileData.SaveProfile(new ProfileData(input));
 
             if (isFirstPlayerChoosingNickname)
-                firstPlayerProfile = ProfileData.LoadProfileFromFile(path);
+                firstPlayerProfile = ProfileData.LoadProfile(path);
             else
-                secondPlayerProfile = ProfileData.LoadProfileFromFile(path);
+                secondPlayerProfile = ProfileData.LoadProfile(path);
         }
 
         override public void Update()
