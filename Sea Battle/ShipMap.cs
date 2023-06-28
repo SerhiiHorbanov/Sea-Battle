@@ -20,19 +20,7 @@ namespace Sea_Battle
         public ShipMap(bool[,] shipMap)
         {
             this.shipMap = shipMap;
-            shotTilesMap = new bool[10, 10]
-            {
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false},
-                {false, false, false, false, false, false, false, false, false, false}
-            };
+            shotTilesMap = new bool[10, 10] { };
         }
 
         static public ShipMap RandomMap(int startShipCount)

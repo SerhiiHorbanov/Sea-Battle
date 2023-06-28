@@ -11,7 +11,7 @@ namespace Sea_Battle
     class SeaBattle
     {
         static public bool endedPlaying = false;
-        static public State currentState = new ChoosingGameMode();
+        static public State currentState = new PlayingGame(MatchData.standartData);
 
         public void Start()
         {

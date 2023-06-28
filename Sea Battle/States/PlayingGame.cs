@@ -90,7 +90,7 @@ namespace Sea_Battle.States
             (ShipMap currentPlayerMap, ShipMap currentEnemyMap) = isFirstPlayerMoves ? (firstPlayerMap, secondPlayerMap) : (secondPlayerMap, firstPlayerMap);
             
             stringBuilder.Append($"you are ");
-            stringBuilder.Append(isFirstPlayerMoves? matchData.firstPlayerProfile.nickname : matchData.secondPlayerProfile.nickname);
+            stringBuilder.Append(isFirstPlayerMoves? "first player" : "second player");
             stringBuilder.Append("\n");
 
             stringBuilder.Append("this is your map:\n");
@@ -145,11 +145,11 @@ namespace Sea_Battle.States
                 gameEndResult = isFirstPlayerMoves ? GameEndResult.FirstPlayerWin : GameEndResult.SecondPlayerWin;
                 if (gameEndResult == GameEndResult.FirstPlayerWin)
                 {
-                    matchData.FirstPlayerWon();
+                    
                 }
                 else
                 {
-                    matchData.SecondPlayerWon();
+                   
                 }
                 SeaBattle.SetState(new GameEnd(matchData, gameEndResult));
             }

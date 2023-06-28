@@ -29,12 +29,10 @@ namespace Sea_Battle.States
 
         public override void Update()
         {
-            ProfileData.SaveProfile(matchData.firstPlayerProfile);
-            ProfileData.SaveProfile(matchData.secondPlayerProfile);
 
             if (input == ConsoleKey.R)
             {
-                SeaBattle.SetState(new ChoosingGameMode());
+                SeaBattle.SetState(new PlayingGame(MatchData.standartData));
                 return;
             }
 
@@ -58,9 +56,6 @@ namespace Sea_Battle.States
                 Console.WriteLine("first player won!");
             else
                 Console.WriteLine("second player won!");
-
-            Console.WriteLine($"first player wins: {matchData.firstPlayerWins}");
-            Console.WriteLine($"second player wins: {matchData.secondPlayerWins}");
 
             if (!isAnyoneWon)
                 Console.WriteLine("press any key to play again");
